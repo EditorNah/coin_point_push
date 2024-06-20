@@ -11,7 +11,7 @@ wallet_addresses = {
     "eth3": "钱包3的地址"
 }
 # 钉钉机器人的推送地址
-dingtalk_url = "https://oapi.dingtalk.com/robot/send?access_token=c4daa4b7e7d01bfbcdc020de61dd0fce2d63b09bd66159f527241361ac5da15c"
+dingtalk_url = "https://oapi.dingtalk.com/robot/send?access_token=c4daa4b7e7d01bfbcdc020de61dd0fce2d63b09bd66159f52xxxxxxxxxxxxx15c"
 
 
 # 汇总的结果字符串
