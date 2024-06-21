@@ -2,7 +2,9 @@ import requests
 import json
 
 # 定义请求的URL
-url = "https://kx58j6x5me.execute-api.us-east-1.amazonaws.com/scroll/wallet-points"
+url_points = "https://kx58j6x5me.execute-api.us-east-1.amazonaws.com/scroll/wallet-points"
+url_linea = "https://kx58j6x5me.execute-api.us-east-1.amazonaws.com/linea/getUserPointsSearch"
+
 
 # 定义钱包地址列表，有几个地址就有几行，如果只有一个就删除只留一行，最后不要有逗号
 wallet_addresses = {
