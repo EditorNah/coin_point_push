@@ -15,40 +15,61 @@ dingtalk_url = "https://oapi.dingtalk.com/robot/send?access_token=c4daa4b7e7d01b
 
 
 # 汇总的结果字符串
-results = []
+scroll_results = []
+linea_results = []
 
 # 循环遍历每个钱包地址
 for eth, address in wallet_addresses.items():
+    # 请求scroll接口
     params = {
         "walletAddress": address
     }
 
     try:
-        # 发送GET请求
-        response = requests.get(url, params=params)
-        
-        # 检查响应状态码
+        response = requests.get(url_points, params=params)
         if response.status_code == 200:
-            # 解析JSON响应
             data = response.json()
             if data:
-                # 提取points值，保留小数点后4位，并加入汇总字符串
                 points = round(data[0].get("points"), 4)
-                results.append(f"{eth}: {points}")
+                scroll_results.append(f"{eth}: {points}\n")
             else:
                 print(f"Wallet Address: {address} - No data available")
         else:
-            print(f"Failed to get data for address {address}, status code: {response.status_code}")
+            print(f"Failed to get data for address {address} from scroll endpoint, status code: {response.status_code}")
             print("Response:", response.text)
-
     except requests.exceptions.RequestException as e:
-        # 打印请求异常错误
         print(f"Request failed for address {address}: {e}")
 
+    # 请求linea接口
+    params_linea = {
+        "user": address
+    }
+
+    try:
+        response = requests.get(url_linea, params=params_linea)
+        if response.status_code == 200:
+            data = response.json()
+            if data:
+                rank_xp = data[0].get("rank_xp")
+                xp = data[0].get("xp")
+                linea_results.append(f"{eth}: {xp}，Rank排名: {rank_xp}\n")
+            else:
+                print(f"Wallet Address: {address} - No data available from linea endpoint")
+        else:
+            print(f"Failed to get data for address {address} from linea endpoint, status code: {response.status_code}")
+            print("Response:", response.text)
+    except requests.exceptions.RequestException as e:
+        print(f"Request failed for address {address} from linea endpoint: {e}")
+
 # 准备推送的消息内容
-markdown_text = f"## 积分推送\n\nscroll积分：\n"
-for result in results:
-    markdown_text += f"- {result}\n"
+markdown_text = "## 积分推送\n"
+markdown_text += "### scroll积分：\n"
+for result in scroll_results:
+    markdown_text += f"{result} \n"
+
+markdown_text += "### linea积分：\n"
+for result in linea_results:
+    markdown_text += f"{result}\n"
 
 # 构建推送的JSON数据
 payload = {
@@ -69,16 +90,16 @@ headers = {
     "Content-Type": "application/json"
 }
 
-
+# 发送POST请求到钉钉机器人接口
+dingtalk_url = f"https://oapi.dingtalk.com/robot/send?access_token={dingaccess_token}"
 
 try:
     response = requests.post(dingtalk_url, json=payload, headers=headers)
-    # 检查响应状态码
     if response.status_code == 200:
         print("Data pushed successfully to DingTalk.")
     else:
         print(f"Failed to push data to DingTalk, status code: {response.status_code}")
         print("Response:", response.text)
 except requests.exceptions.RequestException as e:
-    # 打印推送请求异常错误
     print(f"Push request failed: {e}")
+
