@@ -91,7 +91,7 @@ def push_to_dingtalk(access_token, message):
     payload = {
         "msgtype": "markdown",
         "markdown": {
-            "title": "scroll积分推送",
+            "title": "积分推送",
             "text": message
         },
         "at": {
