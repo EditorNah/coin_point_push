@@ -15,7 +15,7 @@ config.read(config_path)
 # 从配置文件中获取钱包地址和钉钉access_token
 wallet_addresses = {key: value.lower() for key, value in config['wallets'].items() if value.strip()}
 dingaccess_token = config['dingtalk']['access_token']
-serverchan_key = config['server酱'].get('key', '')
+serverchan_key = config['serverJiang'].get('key', '')
 
 # 定义请求的URL
 url_points = "https://kx58j6x5me.execute-api.us-east-1.amazonaws.com/scroll/wallet-points"
